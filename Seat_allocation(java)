@@ -1,0 +1,154 @@
+import java.util.*;
+public class ent {   //for optimistic input
+	static int int_()
+	{
+		Scanner sc=new Scanner(System.in);
+        while(true)
+        {
+        try
+        {
+            return sc.nextInt();
+        }
+        catch(InputMismatchException e)
+        {
+            sc.next();
+            System.out.println("INVALID");
+            continue;}
+        }
+	}
+	static double double_()
+	{
+		Scanner sc=new Scanner(System.in);
+        while(true)
+        {
+        try
+        {
+            return sc.nextDouble();
+        }
+        catch(InputMismatchException e)
+        {
+            sc.next();
+            System.out.println("INVALID");
+            continue;}
+        }
+	}
+	static String String_()
+	{
+		Scanner sc=new Scanner(System.in);
+		return sc.next();
+	}
+	static String String_L()
+	{
+		Scanner sc=new Scanner(System.in);
+		return sc.nextLine();
+	}
+
+}
+
+
+import java.util.*;
+
+public class Seat_allocation extends ent {
+	String name[];//name of student
+	String coll_na[][];//college name
+	String lock[];
+	int rank[];
+	String seat_name[];
+	int seats[];
+	void accept()
+	{
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter number of students participating\nEnter number of choices each student can enter\nEnter your names of students participating\nEnter rank of the students simultaneously");
+		int n=super.int_();
+		int ch=super.int_();
+		name=new String[n];
+		coll_na=new String[n][ch];
+		rank=new int[n];
+		for(int i=0;i<n;i++)
+			{name[i]=sc.next();//accepts names and rank simulataneously
+			rank[i]=super.int_();}
+		
+		System.out.println("ENTER NUMBER OF COLLEGES");
+		System.out.println("ENTER COLLEGE NAMES   \nENTER NUMBER OF SEATS IN EACH COLLEGE");
+		seats=new int[sc.nextInt()];
+		seat_name=new String[seats.length];
+		for(int i=0;i<seats.length;i++)
+			{seat_name[i]=sc.next();
+		     seats[i]=super.int_();
+			}
+		
+		System.out.println("Enter college names according to preference\nEach row represents choice preference of consecutive ranks");
+		for(int i=0;i<n;i++)
+			for(int j=0;j<ch;j++)
+				{coll_na[i][j]=sc.next().trim();//accepts college preference
+				}
+		
+		lock=new String[n];//locking of choice
+	}
+	void sort()
+	{
+		//i will be sorting the ranks that will swap
+		//coll_na, ranks, names, 
+		for(int i=0;i<rank.length-1;i++)
+			for(int j=0;j<rank.length-1-i;j++)
+			{
+				if(rank[j]>rank[j+1])
+				{
+					int t=rank[j];
+					rank[j]=rank[j+1];
+					rank[j+1]=t;//swap rank
+					
+					String n=name[j];
+					name[j]=name[j+1];
+					name[j+1]=n;//swap name
+					
+					String ar[]=coll_na[j];
+					coll_na[j]=coll_na[j+1];
+					coll_na[j+1]=ar;//swap preference
+				}
+			}
+	}
+	
+	void resolves()
+	{
+		int i=0;
+		for(String ar[]:coll_na)
+		{
+			for(String k:ar )
+			{
+				int f=1;
+				for(int j=0;j<seats.length;j++)
+				{
+					if(seats[j]!=0 && seat_name[j].equals(k))
+						{lock[i]=k;
+						seats[j]--;
+						f=0;
+						break;
+						}
+					else if(k.equals("-1"))//skipping the preference if -1 occured
+					{
+						f=0;
+						break;
+					}
+				}
+				if(f==0)
+					break;
+					
+			}
+			i++;
+		}
+		System.out.println("OUTPUT");
+		for(int l=0;l<name.length;l++)
+			System.out.println(name[l]+" got this college "+lock[l]);
+	}
+	
+
+	public static void main(String[] args) {
+		Seat_allocation ob=new Seat_allocation();
+		ob.accept();
+		ob.sort();
+		ob.resolves();
+
+	}
+
+}
